@@ -36,6 +36,7 @@ Popup          (popup.html)     — Enable toggle + threshold slider
 | [Rust](https://rustup.rs/) | 1.70+ | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
 | [wasm-pack](https://rustwasm.github.io/wasm-pack/) | 0.12+ | `cargo install wasm-pack` |
 | Node.js (optional, for bundling) | 18+ | [nodejs.org](https://nodejs.org) |
+| npm package: `onnxruntime-web` | recent | `npm install onnxruntime-web` |
 
 ---
 
@@ -69,32 +70,27 @@ curl -L -o models/ultraface_320.onnx \
   "https://github.com/onnx/models/raw/main/validated/vision/body_analysis/ultraface/models/version-RFB-320.onnx"
 
 # MobileFaceNet (face recognition, ~4 MB)
-# Download from your preferred source and rename to:
-# models/mobilefacenet.onnx
+curl -L -o models/mobilefacenet.onnx \
+  "https://huggingface.co/py-feat/mobilefacenet/resolve/main/mobilefacenet.onnx"
 ```
 
 ### 3. Obtain ONNX Runtime Web
 
-Download `onnxruntime-web` and place the WebGPU bundle at the path expected
+Install `onnxruntime-web`, then copy the runtime bundle into the path expected
 by `worker.js`:
 
 ```bash
-npm install onnxruntime-web          # or download from CDN
-mkdir -p vendor/onnxruntime-web
-cp node_modules/onnxruntime-web/dist/esm/ort.webgpu.min.mjs \
-   vendor/onnxruntime-web/
-cp node_modules/onnxruntime-web/dist/esm/ort-wasm-simd-threaded.jsep.mjs \
-   vendor/onnxruntime-web/
-cp node_modules/onnxruntime-web/dist/esm/*.wasm \
-   vendor/onnxruntime-web/
+npm install onnxruntime-web
+./scripts/setup-onnxruntime-web.sh
 ```
 
-### 4. (Optional) Create placeholder icons
+The setup script copies the exact `.mjs` and `.wasm` files consumed by
+`worker.js` into `vendor/onnxruntime-web/`.
 
-```bash
-mkdir -p icons
-# Add 16×16, 48×48 and 128×128 PNG icons named icon16.png, icon48.png, icon128.png
-```
+### 4. Icons
+
+Placeholder icons are included in `icons/`. Replace them with your own branded
+16×16, 48×48, and 128×128 PNG assets if desired.
 
 ---
 
@@ -180,6 +176,9 @@ For in-browser tests:
 cd wasm-core
 wasm-pack test --headless --chrome
 ```
+
+See [TESTING_STRATEGY.md](TESTING_STRATEGY.md) for the recommended broader test
+coverage plan for the extension.
 
 ---
 

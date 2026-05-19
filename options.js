@@ -9,6 +9,9 @@
 
 const WORKER_URL = chrome.runtime.getURL("worker.js");
 const WORKER_MSG_TIMEOUT = 60_000; // training can take a while
+const ALLOWED_IMAGE_TYPES = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
+const MAX_TRAINING_IMAGE_BYTES = 10 * 1024 * 1024;
+const MAX_CUSTOM_IMAGE_BYTES = 2 * 1024 * 1024;
 
 // ── Worker helper ─────────────────────────────────────────────────────────────
 let worker = null;
@@ -96,17 +99,30 @@ async function initUI() {
 let selectedFiles = [];
 
 trainFilesInput.addEventListener("change", () => {
-  const files = Array.from(trainFilesInput.files).slice(0, 5);
-  selectedFiles = files;
+  clearStatus(trainStatus);
+
+  try {
+    const files = Array.from(trainFilesInput.files).slice(0, 5);
+    files.forEach((file) => validateImageFile(file, MAX_TRAINING_IMAGE_BYTES));
+    selectedFiles = files;
+  } catch (err) {
+    selectedFiles = [];
+    trainFilesInput.value = "";
+    uploadLabelText.textContent = "Choose 1–5 photos…";
+    previewGrid.innerHTML = "";
+    trainBtn.disabled = true;
+    showStatus(trainStatus, `❌ ${err.message}`, "error");
+    return;
+  }
 
   uploadLabelText.textContent =
-    files.length === 0
+    selectedFiles.length === 0
       ? "Choose 1–5 photos…"
-      : `${files.length} file${files.length > 1 ? "s" : ""} selected`;
+      : `${selectedFiles.length} file${selectedFiles.length > 1 ? "s" : ""} selected`;
 
   // Render previews
   previewGrid.innerHTML = "";
-  files.forEach((file) => {
+  selectedFiles.forEach((file) => {
     const img = document.createElement("img");
     img.className = "preview-thumb";
     img.alt = "";  // leave blank; alt text comes from the label, not file.name
@@ -123,8 +139,7 @@ trainFilesInput.addEventListener("change", () => {
     previewGrid.appendChild(img);
   });
 
-  trainBtn.disabled = files.length === 0;
-  clearStatus(trainStatus);
+  trainBtn.disabled = selectedFiles.length === 0;
 });
 
 // ── Training ──────────────────────────────────────────────────────────────────
@@ -192,8 +207,26 @@ modePixelate.addEventListener("change", () => {
 customFileInput.addEventListener("change", () => {
   const file = customFileInput.files[0];
   if (!file) return;
+
+  clearStatus(settingsStatus);
+
+  try {
+    validateImageFile(file, MAX_CUSTOM_IMAGE_BYTES);
+  } catch (err) {
+    customFileInput.value = "";
+    customPreview.removeAttribute("src");
+    customPreview.classList.add("hidden");
+    customLabelText.textContent = "Choose replacement image…";
+    showStatus(settingsStatus, `❌ ${err.message}`, "error");
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = (e) => {
+    if (typeof e.target.result !== "string" || !e.target.result.startsWith("data:image/")) {
+      showStatus(settingsStatus, "❌ Unsupported image format.", "error");
+      return;
+    }
     customPreview.src = e.target.result;
     customPreview.classList.remove("hidden");
     customLabelText.textContent = "Change replacement image…";
@@ -224,6 +257,16 @@ function showStatus(el, msg, type) {
 function clearStatus(el) {
   el.textContent = "";
   el.className   = "status-msg";
+}
+
+function validateImageFile(file, maxBytes) {
+  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+    throw new Error("Please choose a PNG, JPEG, WebP, or GIF image.");
+  }
+
+  if (file.size > maxBytes) {
+    throw new Error(`Image is too large (max ${Math.floor(maxBytes / (1024 * 1024))} MB).`);
+  }
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────

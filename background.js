@@ -10,17 +10,23 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type !== "FETCH_IMAGE") return false;
 
-  const { url } = message;
-  if (!url || typeof url !== "string") {
+  const normalizedUrl = normalizeImageUrl(message?.url);
+  if (!normalizedUrl) {
     sendResponse({ error: "Invalid URL" });
     return true;
   }
 
-  fetch(url)
+  fetch(normalizedUrl)
     .then((response) => {
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status} for ${url}`);
+        throw new Error(`HTTP ${response.status} for ${normalizedUrl}`);
       }
+
+      const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+      if (!contentType.startsWith("image/")) {
+        throw new Error(`Unexpected content type: ${contentType || "unknown"}`);
+      }
+
       return response.arrayBuffer();
     })
     .then((buffer) => {
@@ -36,3 +42,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // Return true to keep the message channel open for the async response.
   return true;
 });
+
+function normalizeImageUrl(url) {
+  if (!url || typeof url !== "string") {
+    return null;
+  }
+
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return null;
+    }
+    return parsed.href;
+  } catch {
+    return null;
+  }
+}
