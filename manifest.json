@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Seashells – Face Redaction",
+  "version": "1.0.0",
+  "description": "Privacy-first, zero-server face detection and redaction. All processing happens locally in your browser.",
+
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Seashells"
+  },
+
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "worker.js",
+        "wasm-core/pkg/*.wasm",
+        "wasm-core/pkg/*.js",
+        "models/*.onnx"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+
+  "icons": {
+    "16":  "icons/icon16.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

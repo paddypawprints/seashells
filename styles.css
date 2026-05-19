@@ -1,0 +1,460 @@
+/* =============================================================================
+   styles.css — Seashells Extension Styles
+   Clean, modern design system shared by popup.html and options.html
+   ============================================================================= */
+
+/* ── Reset & Base ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-bg:         #0f1117;
+  --color-surface:    #1a1d27;
+  --color-surface-2:  #23263a;
+  --color-border:     #2e3150;
+  --color-primary:    #6c63ff;
+  --color-primary-h:  #8b85ff;
+  --color-success:    #22c55e;
+  --color-error:      #ef4444;
+  --color-text:       #e2e8f0;
+  --color-text-muted: #7c8ba1;
+  --radius-sm:        6px;
+  --radius-md:        12px;
+  --radius-lg:        18px;
+  --shadow:           0 4px 24px rgba(0, 0, 0, 0.5);
+  --transition:       0.2s ease;
+  --font:             'Inter', system-ui, -apple-system, sans-serif;
+}
+
+html {
+  font-family: var(--font);
+  font-size: 15px;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  line-height: 1.6;
+}
+
+/* ── Screen-reader only ─────────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* =============================================================================
+   Options Page
+   ============================================================================= */
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.hint {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Upload Label ─────────────────────────────────────────────────────────── */
+.upload-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface-2);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  transition: border-color var(--transition), color var(--transition);
+  user-select: none;
+  margin-bottom: 1rem;
+}
+
+.upload-label:hover {
+  border-color: var(--color-primary);
+  color: var(--color-text);
+}
+
+.upload-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* ── Preview Grid ─────────────────────────────────────────────────────────── */
+.preview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  min-height: 0;
+}
+
+.preview-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-border);
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: opacity var(--transition), background var(--transition);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:not(:disabled):hover {
+  background: var(--color-primary-h);
+}
+
+.btn-secondary {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:not(:disabled):hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary-h);
+}
+
+/* ── Spinner ──────────────────────────────────────────────────────────────── */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Status Message ───────────────────────────────────────────────────────── */
+.status-msg {
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+  min-height: 1.2em;
+}
+
+.status-msg.success { color: var(--color-success); }
+.status-msg.error   { color: var(--color-error); }
+
+/* ── Radio Group ──────────────────────────────────────────────────────────── */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition);
+}
+
+.radio-label:hover {
+  border-color: var(--color-primary);
+}
+
+.radio-label input[type="radio"] {
+  display: none;
+}
+
+.radio-indicator {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--color-text-muted);
+  margin-top: 3px;
+  transition: border-color var(--transition), background var(--transition);
+  position: relative;
+}
+
+.radio-label input[type="radio"]:checked + .radio-indicator {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.radio-label input[type="radio"]:checked + .radio-indicator::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.radio-label span strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.radio-label span small {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Custom upload area ───────────────────────────────────────────────────── */
+.custom-upload {
+  margin-bottom: 1.25rem;
+}
+
+.custom-preview {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  margin-top: 0.5rem;
+}
+
+/* =============================================================================
+   Popup
+   ============================================================================= */
+
+.popup-body {
+  min-width: 280px;
+  max-width: 320px;
+  background: var(--color-bg);
+}
+
+.popup-container {
+  padding: 1rem 1.1rem 1.25rem;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.popup-icon {
+  font-size: 1.4rem;
+}
+
+.popup-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* ── Toggle row ──────────────────────────────────────────────────────────── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.toggle-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ── Toggle Switch ───────────────────────────────────────────────────────── */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle-thumb {
+  position: absolute;
+  inset: 0;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.toggle-thumb::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-text-muted);
+  border-radius: 50%;
+  transition: transform var(--transition), background var(--transition);
+}
+
+.toggle-switch input:checked + .toggle-thumb {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.toggle-switch input:checked + .toggle-thumb::before {
+  transform: translate(20px, -50%);
+  background: #fff;
+}
+
+/* ── Slider row ──────────────────────────────────────────────────────────── */
+.slider-row {
+  margin-bottom: 1.25rem;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.slider-value {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  color: var(--color-primary-h);
+  font-weight: 600;
+}
+
+.range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-surface-2);
+  outline: none;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(108,99,255,0.25);
+  transition: box-shadow var(--transition);
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 5px rgba(108,99,255,0.35);
+}
+
+.slider-hints {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+/* ── Options link ────────────────────────────────────────────────────────── */
+.options-link {
+  display: block;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: 0.4rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+}
+
+.options-link:hover {
+  color: var(--color-primary-h);
+  background: var(--color-surface-2);
+}
