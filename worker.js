@@ -180,12 +180,12 @@ async function runDetection(rgba, imgWidth, imgHeight) {
   const inputH = 240, inputW = DETECTION_SIZE;
   const tensor = rgbaToDetectionTensor(rgba, imgWidth, imgHeight, inputW, inputH);
 
-  const feeds = { [detSession.inputNames[0]]: tensor };
+  const feeds = { [getRequiredInputName(detSession, "Detection")]: tensor };
   const results = await detSession.run(feeds);
 
   // ultraface_320 outputs: scores [1, N, 2], boxes [1, N, 4]
-  const scoresOut = results[detSession.outputNames[0]].data; // Float32Array
-  const boxesOut  = results[detSession.outputNames[1]].data; // Float32Array
+  const scoresOut = getRequiredOutputData(detSession, results, 0, "Detection");
+  const boxesOut  = getRequiredOutputData(detSession, results, 1, "Detection");
 
   const numPriors = scoresOut.length / 2;
 
@@ -255,13 +255,35 @@ function rgbaToDetectionTensor(rgba, srcW, srcH, dstW, dstH) {
  */
 async function runRecognition(batchData, n) {
   const tensor = new ort.Tensor("float32", batchData, [n, 3, 112, 112]);
-  const feeds  = { [recSession.inputNames[0]]: tensor };
+  const feeds  = { [getRequiredInputName(recSession, "Recognition")]: tensor };
   const results = await recSession.run(feeds);
-  const raw     = results[recSession.outputNames[0]].data; // Float32Array [N*128]
+  const raw     = getRequiredOutputData(recSession, results, 0, "Recognition");
 
   const embeddings = [];
   for (let i = 0; i < n; i++) {
     embeddings.push(raw.slice(i * EMBED_DIM, (i + 1) * EMBED_DIM));
   }
   return embeddings;
+}
+
+function getRequiredInputName(session, label) {
+  const inputName = session?.inputNames?.[0];
+  if (typeof inputName !== "string" || inputName.length === 0) {
+    throw new Error(`${label} model input metadata is invalid`);
+  }
+  return inputName;
+}
+
+function getRequiredOutputData(session, results, index, label) {
+  const outputName = session?.outputNames?.[index];
+  if (typeof outputName !== "string" || outputName.length === 0) {
+    throw new Error(`${label} model output metadata is invalid`);
+  }
+
+  const output = results?.[outputName]?.data;
+  if (!(output instanceof Float32Array)) {
+    throw new Error(`${label} model output "${outputName}" is invalid`);
+  }
+
+  return output;
 }

@@ -69,7 +69,6 @@
   // ── Main image processing pipeline ──────────────────────────────────────────
   async function processImage(img) {
     if (processed.has(img)) return;
-    processed.add(img);
 
     // Ignore tiny or unloaded images
     const w = img.naturalWidth  || img.width;
@@ -85,6 +84,8 @@
 
     if (!settings.enabled) return;
     if (!settings.targetVector) return; // not trained yet
+
+    processed.add(img);
 
     const threshold = settings.threshold ?? 1.2;
     const targetVector = new Float32Array(Object.values(settings.targetVector));
@@ -244,6 +245,19 @@
   }
 
   document.querySelectorAll("img").forEach(scanImage);
+
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== "local") return;
+
+    const enabledBecameTrue =
+      changes.enabled?.newValue === true && changes.enabled.oldValue !== true;
+    const targetVectorAdded =
+      changes.targetVector?.newValue && !changes.targetVector?.oldValue;
+
+    if (enabledBecameTrue || targetVectorAdded) {
+      document.querySelectorAll("img").forEach(scanImage);
+    }
+  });
 
   // ── MutationObserver for dynamically inserted images ──────────────────────────
   const observer = new MutationObserver((mutations) => {

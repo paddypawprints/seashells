@@ -25,3 +25,7 @@ wasm-core/pkg/
 
 # node_modules (if any tooling is installed locally)
 node_modules/
+
+# Downloaded runtime/model assets
+models/
+vendor/onnxruntime-web/
