@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seashells</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="popup-body">
+  <div class="popup-container">
+    <header class="popup-header">
+      <span class="popup-icon">🐚</span>
+      <h1 class="popup-title">Seashells</h1>
+    </header>
+
+    <!-- Enable / Disable toggle -->
+    <div class="toggle-row">
+      <span class="toggle-label">Face Redaction</span>
+      <label class="toggle-switch" aria-label="Enable face redaction">
+        <input type="checkbox" id="enable-toggle" />
+        <span class="toggle-thumb"></span>
+      </label>
+    </div>
+
+    <!-- Distance threshold slider -->
+    <div class="slider-row">
+      <label for="threshold-slider" class="slider-label">
+        Match Threshold
+        <span id="threshold-value" class="slider-value">1.20</span>
+      </label>
+      <input
+        type="range"
+        id="threshold-slider"
+        min="0.5"
+        max="1.5"
+        step="0.05"
+        value="1.2"
+        class="range-slider"
+        aria-label="Match distance threshold"
+      />
+      <div class="slider-hints">
+        <span>Strict</span>
+        <span>Lenient</span>
+      </div>
+    </div>
+
+    <a href="#" id="open-options" class="options-link">⚙️ Configure &amp; Train</a>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seashells – Options</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="app-header">
+      <h1>🐚 Seashells</h1>
+      <p class="subtitle">Face Redaction – Options</p>
+    </header>
+
+    <!-- ── Training Section ──────────────────────────────────────────── -->
+    <section class="card" id="train-section">
+      <h2>Train Target Face</h2>
+      <p class="hint">
+        Upload 1–5 clear, front-facing photos of the person whose face should be
+        redacted. All processing happens locally — images never leave your browser.
+      </p>
+
+      <label class="upload-label" for="train-files">
+        <span class="upload-icon">📁</span>
+        <span id="upload-label-text">Choose 1–5 photos…</span>
+      </label>
+      <input
+        type="file"
+        id="train-files"
+        accept="image/*"
+        multiple
+        class="sr-only"
+      />
+
+      <div id="preview-grid" class="preview-grid" aria-live="polite"></div>
+
+      <button id="train-btn" class="btn btn-primary" disabled>
+        <span id="train-btn-text">Train Model</span>
+        <span id="train-spinner" class="spinner hidden" aria-hidden="true"></span>
+      </button>
+
+      <div id="train-status" class="status-msg" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- ── Redaction Mode ──────────────────────────────────────────────── -->
+    <section class="card" id="redaction-section">
+      <h2>Redaction Mode</h2>
+
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="redactionMode" value="pixelate" id="mode-pixelate" checked />
+          <span class="radio-indicator"></span>
+          <span>
+            <strong>Pixelate</strong>
+            <small>Blurs the detected face region</small>
+          </span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="redactionMode" value="custom" id="mode-custom" />
+          <span class="radio-indicator"></span>
+          <span>
+            <strong>Custom Image</strong>
+            <small>Replace face with your chosen image</small>
+          </span>
+        </label>
+      </div>
+
+      <div id="custom-upload-area" class="custom-upload hidden">
+        <label class="upload-label" for="custom-file">
+          <span class="upload-icon">🖼️</span>
+          <span id="custom-label-text">Choose replacement image…</span>
+        </label>
+        <input
+          type="file"
+          id="custom-file"
+          accept="image/*"
+          class="sr-only"
+        />
+        <img id="custom-preview" class="custom-preview hidden" alt="Custom overlay preview" />
+      </div>
+
+      <button id="save-settings-btn" class="btn btn-secondary">Save Settings</button>
+      <div id="settings-status" class="status-msg" role="status" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <script src="options.js" type="module"></script>
+</body>
+</html>
