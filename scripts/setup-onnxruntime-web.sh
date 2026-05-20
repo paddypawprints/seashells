@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE_DIR="${1:-$ROOT_DIR/node_modules/onnxruntime-web/dist/esm}"
+SOURCE_DIR="${1:-$ROOT_DIR/node_modules/onnxruntime-web/dist}"
 TARGET_DIR="$ROOT_DIR/vendor/onnxruntime-web"
 
 if [[ ! -d "$SOURCE_DIR" ]]; then
