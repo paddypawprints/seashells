@@ -42,6 +42,21 @@ Popup          (popup.html)     — Enable toggle + threshold slider
 
 ## Build Instructions
 
+### GitHub / CI Build Script
+
+To build everything end-to-end in one command (tests, Wasm package, ONNX Runtime
+assets, and model downloads), run:
+
+```bash
+./scripts/build-system.sh
+```
+
+To skip model downloads (for offline/local CI scenarios):
+
+```bash
+SKIP_MODEL_DOWNLOAD=1 ./scripts/build-system.sh
+```
+
 ### 1. Compile the Rust Wasm Core
 
 ```bash
