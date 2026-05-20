@@ -1,0 +1,9 @@
+{
+  "name": "seashells",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Privacy-first face redaction browser extension",
+  "dependencies": {
+    "onnxruntime-web": "^1.26.0"
+  }
+}
