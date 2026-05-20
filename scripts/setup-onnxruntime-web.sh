@@ -6,6 +6,13 @@ SOURCE_DIR="${1:-$ROOT_DIR/node_modules/onnxruntime-web/dist/esm}"
 TARGET_DIR="$ROOT_DIR/vendor/onnxruntime-web"
 
 if [[ ! -d "$SOURCE_DIR" ]]; then
+  LEGACY_FALLBACK="$ROOT_DIR/node_modules/onnxruntime-web/dist"
+  if [[ -d "$LEGACY_FALLBACK" ]]; then
+    SOURCE_DIR="$LEGACY_FALLBACK"
+  fi
+fi
+
+if [[ ! -d "$SOURCE_DIR" ]]; then
   echo "Could not find ONNX Runtime Web assets at: $SOURCE_DIR" >&2
   echo "Install the dependency first with: npm install onnxruntime-web" >&2
   exit 1

@@ -38,7 +38,7 @@ echo "Running Rust tests"
 echo "Building Wasm package"
 (
   cd "$ROOT_DIR/wasm-core"
-  wasm-pack build --target web --release
+  wasm-pack build --target web --release --no-opt
 )
 
 echo "Preparing ONNX Runtime Web assets"
@@ -49,7 +49,13 @@ cleanup() {
 trap cleanup EXIT
 
 npm install --no-save --prefix "$NPM_TMP_DIR" onnxruntime-web
-"$ROOT_DIR/scripts/setup-onnxruntime-web.sh" "$NPM_TMP_DIR/node_modules/onnxruntime-web/dist/esm"
+ORT_DIST_DIR="$NPM_TMP_DIR/node_modules/onnxruntime-web/dist"
+ORT_ESM_DIR="$ORT_DIST_DIR/esm"
+if [[ -d "$ORT_ESM_DIR" ]]; then
+  "$ROOT_DIR/scripts/setup-onnxruntime-web.sh" "$ORT_ESM_DIR"
+else
+  "$ROOT_DIR/scripts/setup-onnxruntime-web.sh" "$ORT_DIST_DIR"
+fi
 
 if [[ "${SKIP_MODEL_DOWNLOAD:-0}" == "1" ]]; then
   echo "Skipping model download (SKIP_MODEL_DOWNLOAD=1)"
