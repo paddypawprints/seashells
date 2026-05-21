@@ -70,4 +70,7 @@ else
     "https://huggingface.co/py-feat/mobilefacenet/resolve/main/mobilefacenet.onnx"
 fi
 
+echo "Packaging browser extension"
+"$ROOT_DIR/scripts/package-browser-plugin.sh"
+
 echo "Build completed successfully"

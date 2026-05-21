@@ -92,6 +92,21 @@ The setup script copies the exact `.mjs` and `.wasm` files consumed by
 Placeholder icons are included in `icons/`. Replace them with your own branded
 16×16, 48×48, and 128×128 PNG assets if desired.
 
+### 5. Package as a browser plugin (.zip)
+
+After the Wasm and runtime assets are present, package the extension:
+
+```bash
+./scripts/package-browser-plugin.sh
+```
+
+This writes:
+- `dist/seashells-extension/` (unpacked extension folder)
+- `dist/seashells-extension.zip` (installable/distributable package)
+
+> The full build entrypoint `./scripts/build-system.sh` now runs this packaging
+> step automatically after building assets.
+
 ---
 
 ## Final Directory Layout

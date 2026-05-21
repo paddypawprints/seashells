@@ -39,5 +39,7 @@ jobs:
         with:
           name: seashells-build-artifacts
           path: |
+            dist/seashells-extension.zip
+            dist/seashells-extension
             wasm-core/pkg
             vendor/onnxruntime-web
